@@ -6,35 +6,26 @@ import Actors from "./Actors";
 import Directors from "./Directors";
 import Movies from "./Movies";
 
-function App() {
+const App = () => {
   return (
     <div>
-      <NavBar/>
-
-      <Switch>
-
-        {/* Movies */}
-        <Route axact path="/movies">
-          <Movies/>
-        </Route>
-
-        {/* Directors */}
-        <Route exact path="/directors">
-          <Directors/>
-        </Route>
-
-        {/* Actors */}
-        <Route exact path="/actors">
-          <Actors/>
-        </Route>
-
-        {/* Home */}
-        <Route exact path="/"> 
-          <Home/>
-        </Route>
-    
-      </Switch>
-
+      <BrowserRouter>
+        <NavBar />
+        <Switch>
+          <Route exact path="/movies">
+            <Movies />
+          </Route>
+          <Route exact path="/directors">
+            <Directors />
+          </Route>
+          <Route exact path="/actors">
+            <Actors />
+          </Route>
+          <Route exact path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </BrowserRouter>
     </div>
   );
 }

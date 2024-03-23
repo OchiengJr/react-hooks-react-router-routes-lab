@@ -4,39 +4,41 @@ import { render, screen } from "@testing-library/react";
 import Actors from "../components/Actors";
 import { actors } from "../data";
 
+// Mock console.error to prevent it from being called during the test
+beforeEach(() => {
+  jest.spyOn(global.console, "error").mockImplementation(() => {});
+});
+
+// Restore the original console.error implementation after each test
+afterEach(() => {
+  console.error.mockRestore();
+});
+
 test("renders without any errors", () => {
-  const errorSpy = jest.spyOn(global.console, "error");
-
   render(<Actors />);
-
-  expect(errorSpy).not.toHaveBeenCalled();
-
-  errorSpy.mockRestore();
+  expect(console.error).not.toHaveBeenCalled();
 });
 
 test("renders 'Actors Page' inside of the <h1 />", () => {
   render(<Actors />);
-  const h1 = screen.queryByText(/Actors Page/g);
+  const h1 = screen.getByRole("heading", { name: /Actors Page/i });
   expect(h1).toBeInTheDocument();
-  expect(h1.tagName).toBe("H1");
 });
 
 test("renders each actor's name", () => {
   render(<Actors />);
-  for (const actor of actors) {
-    expect(
-      screen.queryByText(actor.name, { exact: false })
-    ).toBeInTheDocument();
-  }
+  actors.forEach((actor) => {
+    expect(screen.getByText(actor.name)).toBeInTheDocument();
+  });
 });
 
 test("renders a <li /> for each movie", () => {
   render(<Actors />);
-  for (const actor of actors) {
-    for (const movie of actor.movies) {
-      const li = screen.queryByText(movie, { exact: false });
-      expect(li).toBeInTheDocument();
-      expect(li.tagName).toBe("LI");
-    }
-  }
+  actors.forEach((actor) => {
+    actor.movies.forEach((movie) => {
+      const listItem = screen.getByText(movie);
+      expect(listItem).toBeInTheDocument();
+      expect(listItem.tagName).toBe("LI");
+    });
+  });
 });
